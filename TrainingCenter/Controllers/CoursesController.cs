@@ -1,0 +1,184 @@
+﻿using System;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web.Mvc;
+using TrainingCenter.Models;
+
+namespace TrainingCenter.Controllers
+{
+    public class CoursesController : Controller
+    {
+        private TrainingCenterContext db = new TrainingCenterContext();
+
+        // GET: Courses
+        public ActionResult Index()
+        {
+            return View(db.Courses.ToList());
+        }
+
+        // GET: Courses/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Course course = db.Courses.Find(id);
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+            return View(course);
+        }
+
+        // GET: Courses/Create
+        public ActionResult Create()
+        {
+            if (TempData["Message"] != null)
+            {
+                ViewBag.Message = TempData["Message"];
+            }
+
+            return View(new Course());
+        }
+
+        // POST: Courses/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "CourseId,CourseName,Instructor,StartDate,Fee,MaxStudents")] Course course)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingCourse = db.Courses.FirstOrDefault(c => c.CourseName == course.CourseName && c.Instructor == course.Instructor);
+                if (existingCourse != null)
+                {
+                    TempData["Message"] = "Tạo thất bại: Khóa học đã tồn tại.";
+                    TempData["MessageType"] = "error";
+                    return View(course); // Trả về form với dữ liệu hiện tại
+                }
+                else
+                {
+                    db.Courses.Add(course);
+                    db.SaveChanges();
+                    TempData["Message"] = "Tạo khóa học thành công!";
+                    TempData["MessageType"] = "success";
+                    return RedirectToAction("Index");
+                }
+            }
+
+            // Nếu ModelState không hợp lệ
+            TempData["Message"] = "Dữ liệu không hợp lệ.";
+            TempData["MessageType"] = "error";
+            return View(course);
+        }
+
+        // GET: Courses/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Course course = db.Courses.Find(id);
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+            return View(course);
+        }
+
+        // POST: Courses/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "CourseId,CourseName,Instructor,StartDate,Fee,MaxStudents")] Course course)
+        {
+            if (ModelState.IsValid)
+            {
+                // Kiểm tra trùng lặp CourseName và Instructor, ngoại trừ chính khóa học đang chỉnh sửa
+                var existingCourse = db.Courses.FirstOrDefault(c => c.CourseName == course.CourseName && c.Instructor == course.Instructor && c.CourseId != course.CourseId);
+                if (existingCourse != null)
+                {
+                    TempData["Message"] = "Cập nhật thất bại: Khóa học đã tồn tại.";
+                    TempData["MessageType"] = "error";
+                    return View(course);
+                }
+
+                // Cập nhật khóa học
+                db.Entry(course).State = EntityState.Modified;
+                db.SaveChanges();
+                TempData["Message"] = "Cập nhật khóa học thành công!";
+                TempData["MessageType"] = "success";
+                return View(course); // Ở lại trang Edit với dữ liệu hiện tại
+            }
+
+            // Nếu ModelState không hợp lệ
+            TempData["Message"] = "Dữ liệu không hợp lệ.";
+            TempData["MessageType"] = "error";
+            return View(course);
+        }
+
+        // GET: Courses/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                TempData["Message"] = "Yêu cầu không hợp lệ.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
+            }
+
+            Course course = db.Courses.Find(id);
+            if (course == null)
+            {
+                TempData["Message"] = "Khóa học không tồn tại hoặc đã bị xóa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
+            }
+
+            return View(course);
+        }
+
+        // POST: Courses/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Course course = db.Courses.Find(id);
+            if (course == null)
+            {
+                TempData["Message"] = "Khóa học không tồn tại hoặc đã bị xóa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                db.Courses.Remove(course);
+                db.SaveChanges();
+                TempData["Message"] = "Xóa khóa học thành công!";
+                TempData["MessageType"] = "success";
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                TempData["Message"] = "Xóa thất bại: Có lỗi xảy ra, có thể khóa học đang được sử dụng.";
+                TempData["MessageType"] = "error";
+                return View(course);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

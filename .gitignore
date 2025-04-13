@@ -1,0 +1,34 @@
+# Visual Studio specific
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+build/
+Build/
+build_output/
+
+# Nuget Packages
+packages/
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Rider
+.idea/
+
+# User specific files
+*.DotSettings.user
+
+# Other
+*.log
+*.cache
+*.diff
+*.patch

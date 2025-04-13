@@ -1,0 +1,36 @@
+﻿@model IEnumerable<TrainingCenter.Models.Course>
+
+@{
+    ViewBag.Title = "Danh sách khóa học";
+}
+
+<h2>Danh sách khóa học</h2>
+<hr />
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="@Url.Action("Create", "Enrollments", new { returnUrl = Url.Action("Index", "Enrollments") })" class="btn btn-success">
+        <i class="fas fa-plus"></i> Thêm mới
+    </a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên khóa học</th>
+            <th>Giảng viên</th>
+            <th style="width: 16%;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CourseName</td>
+                <td>@item.Instructor</td>
+                <td>
+                    @Html.ActionLink("Xem danh sách học viên", "StudentsByCourse", "Enrollments", new { id = item.CourseId }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
