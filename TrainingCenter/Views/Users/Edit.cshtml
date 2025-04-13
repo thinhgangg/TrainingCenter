@@ -1,4 +1,4 @@
-﻿@model TrainingCenter.Models.Student
+﻿@model TrainingCenter.Models.User
 
 @{
     ViewBag.Title = "Chỉnh sửa thông tin học viên";
@@ -33,7 +33,7 @@
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.StudentId)
+        @Html.HiddenFor(model => model.UserId)
 
         <div class="form-group">
             @Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "control-label col-md-2", style = "font-weight: bold" })

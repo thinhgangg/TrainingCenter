@@ -5,17 +5,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrainingCenter.Models
 {
-    [Table("students")]
-    public class Student
+    [Table("users")]
+    public class User
     {
-        public Student()
+        public User()
         {
             Enrollments = new HashSet<Enrollment>();
         }
 
         [Key]
-        [Column("student_id")]
-        public int StudentId { get; set; }
+        [Column("user_id")]
+        public int UserId { get; set; }
 
         [Display(Name = "Họ và tên")]
         [Column("full_name")]
@@ -59,7 +59,7 @@ namespace TrainingCenter.Models
         [Display(Name = "Quyền")]
         [Column("role")]
         [Required]
-        public string Role { get; set; } = "student";
+        public string Role { get; set; } = "user";
 
         public virtual ICollection<Enrollment> Enrollments { get; set; }
     }

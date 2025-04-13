@@ -8,32 +8,32 @@ using TrainingCenter.Models;
 
 namespace TrainingCenter.Controllers
 {
-    public class StudentsController : Controller
+    public class UsersController : Controller
     {
         private TrainingCenterContext db = new TrainingCenterContext();
 
-        // GET: Students
+        // GET: Users
         public ActionResult Index()
         {
-            var students = db.Students
+            var users = db.Users
                     .ToList()
                     .OrderBy(s => s.FullName.Split(' ').Last())
                     .ToList();
-            return View(students);
+            return View(users);
         }
 
-        // GET: Students/Dashboard
+        // GET: Users/Dashboard
         public ActionResult Dashboard()
         {
-            if (Session["StudentId"] == null)
+            if (Session["UserId"] == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            int studentId = (int)Session["StudentId"];
-            var student = db.Students.Find(studentId);
+            int userId = (int)Session["UserId"];
+            var user = db.Users.Find(userId);
 
-            if (student == null)
+            if (user == null)
             {
                 TempData["Message"] = "Không tìm thấy học viên.";
                 TempData["MessageType"] = "error";
@@ -42,7 +42,7 @@ namespace TrainingCenter.Controllers
 
             var model = new DashboardViewModel
             {
-                Student = student,
+                User = user,
                 OpenCourses = db.Courses
                     .Where(c => c.StartDate > DateTime.Now)
                     .OrderBy(c => c.StartDate)
@@ -54,7 +54,7 @@ namespace TrainingCenter.Controllers
                     .ToList(),
                 EnrolledCourses = db.Enrollments
                     .Include(e => e.Course)
-                    .Where(e => e.StudentId == studentId)
+                    .Where(e => e.UserId == userId)
                     .Select(e => new CourseWithEnrollment
                     {
                         Course = e.Course,
@@ -67,58 +67,58 @@ namespace TrainingCenter.Controllers
         }
 
 
-        // GET: Students/Details/5
+        // GET: Users/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = db.Students.Find(id);
-            if (student == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(student);
+            return View(user);
         }
 
-        // GET: Students/Create
+        // GET: Users/Create
         public ActionResult Create()
         {
-            return View(new Student());
+            return View(new User());
         }
 
-        // POST: Students/Create
+        // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "StudentId,FullName,Dob,PhoneNumber,Email,Username,Password")] Student student)
+        public ActionResult Create([Bind(Include = "userId,FullName,Dob,PhoneNumber,Email,Username,Password")] User user)
         {
             if (ModelState.IsValid)
             {
-                if (db.Students.Any(s => s.PhoneNumber == student.PhoneNumber))
+                if (db.Users.Any(s => s.PhoneNumber == user.PhoneNumber))
                 {
                     TempData["Message"] = "Tạo thất bại: Số điện thoại đã được sử dụng.";
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
-                if (db.Students.Any(s => s.Email == student.Email))
+                if (db.Users.Any(s => s.Email == user.Email))
                 {
                     TempData["Message"] = "Tạo thất bại: Email đã được sử dụng.";
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
-                if (db.Students.Any(s => s.Username == student.Username))
+                if (db.Users.Any(s => s.Username == user.Username))
                 {
                     TempData["Message"] = "Tạo thất bại: Tên người dùng đã tồn tại.";
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
 
                 try
                 {
-                    db.Students.Add(student);
+                    db.Users.Add(user);
                     db.SaveChanges();
                     TempData["Message"] = "Tạo học viên thành công!";
                     TempData["MessageType"] = "success";
@@ -128,7 +128,7 @@ namespace TrainingCenter.Controllers
                 {
                     TempData["Message"] = "Tạo thất bại: " + ex.Message;
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
             }
 
@@ -136,10 +136,10 @@ namespace TrainingCenter.Controllers
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
             TempData["Message"] = "Dữ liệu không hợp lệ: " + string.Join("; ", errors);
             TempData["MessageType"] = "error";
-            return View(student);
+            return View(user);
         }
 
-        // GET: Students/Edit/5
+        // GET: Users/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -149,8 +149,8 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Index");
             }
 
-            Student student = db.Students.Find(id);
-            if (student == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 TempData["Message"] = "Học viên không tồn tại.";
                 TempData["MessageType"] = "error";
@@ -161,14 +161,14 @@ namespace TrainingCenter.Controllers
             string returnUrl = Request.UrlReferrer?.AbsolutePath;
             if (returnUrl != null)
             {
-                if (returnUrl.Contains("/Students/Details"))
+                if (returnUrl.Contains("/Users/Details"))
                 {
                     ViewBag.ReturnAction = "Details";
                     ViewBag.ReturnId = id;
                     TempData["ReturnAction"] = "Details";
                     TempData["ReturnId"] = id;
                 }
-                else if (returnUrl.Contains("/Students/Dashboard"))
+                else if (returnUrl.Contains("/Users/Dashboard"))
                 {
                     ViewBag.ReturnAction = "Dashboard";
                     TempData["ReturnAction"] = "Dashboard";
@@ -185,39 +185,39 @@ namespace TrainingCenter.Controllers
                 TempData["ReturnAction"] = "Index";
             }
 
-            return View(student);
+            return View(user);
         }
 
-        // POST: Students/Edit/5
+        // POST: Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "StudentId,FullName,Dob,PhoneNumber,Email,Username,Password")] Student student)
+        public ActionResult Edit([Bind(Include = "userId,FullName,Dob,PhoneNumber,Email,Username,Password")] User user)
         {
             if (ModelState.IsValid)
             {
                 // Kiểm tra trùng Email hoặc Username (trừ học viên hiện tại)
-                if (db.Students.Any(s => s.Email == student.Email && s.StudentId != student.StudentId))
+                if (db.Users.Any(s => s.Email == user.Email && s.UserId != user.UserId))
                 {
                     TempData["Message"] = "Cập nhật thất bại: Email đã được sử dụng.";
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
-                if (db.Students.Any(s => s.PhoneNumber == student.PhoneNumber && s.StudentId != student.StudentId))
+                if (db.Users.Any(s => s.PhoneNumber == user.PhoneNumber && s.UserId != user.UserId))
                 {
                     TempData["Message"] = "Cập nhật thất bại: Số điện thoại đã được sử dụng.";
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
-                if (db.Students.Any(s => s.Username == student.Username && s.StudentId != student.StudentId))
+                if (db.Users.Any(s => s.Username == user.Username && s.UserId != user.UserId))
                 {
                     TempData["Message"] = "Cập nhật thất bại: Tên người dùng đã tồn tại.";
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
 
                 try
                 {
-                    db.Entry(student).State = EntityState.Modified;
+                    db.Entry(user).State = EntityState.Modified;
                     db.SaveChanges();
                     TempData["Message"] = "Cập nhật học viên thành công!";
                     TempData["MessageType"] = "success";
@@ -242,7 +242,7 @@ namespace TrainingCenter.Controllers
                 {
                     TempData["Message"] = "Cập nhật thất bại: " + ex.Message;
                     TempData["MessageType"] = "error";
-                    return View(student);
+                    return View(user);
                 }
             }
 
@@ -250,10 +250,10 @@ namespace TrainingCenter.Controllers
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
             TempData["Message"] = "Dữ liệu không hợp lệ: " + string.Join("; ", errors);
             TempData["MessageType"] = "error";
-            return View(student);
+            return View(user);
         }
 
-        // GET: Students/Delete/5
+        // GET: Users/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -263,24 +263,24 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Index");
             }
 
-            Student student = db.Students.Find(id);
-            if (student == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 TempData["Message"] = "Học viên không tồn tại hoặc đã bị xóa.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("Index");
             }
 
-            return View(student);
+            return View(user);
         }
 
-        // POST: Students/Delete/5
+        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Student student = db.Students.Find(id);
-            if (student == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 TempData["Message"] = "Học viên không tồn tại hoặc đã bị xóa.";
                 TempData["MessageType"] = "error";
@@ -289,7 +289,7 @@ namespace TrainingCenter.Controllers
 
             try
             {
-                db.Students.Remove(student);
+                db.Users.Remove(user);
                 db.SaveChanges();
                 TempData["Message"] = "Xóa học viên thành công!";
                 TempData["MessageType"] = "success";
@@ -299,7 +299,7 @@ namespace TrainingCenter.Controllers
             {
                 TempData["Message"] = "Xóa thất bại: " + (ex.InnerException?.Message ?? ex.Message);
                 TempData["MessageType"] = "error";
-                return View(student);
+                return View(user);
             }
         }
 
