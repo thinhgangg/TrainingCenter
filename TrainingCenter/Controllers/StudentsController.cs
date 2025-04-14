@@ -2,7 +2,6 @@
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using TrainingCenter.Models;
 
@@ -12,9 +11,25 @@ namespace TrainingCenter.Controllers
     {
         private TrainingCenterContext db = new TrainingCenterContext();
 
+        private bool IsAdmin()
+        {
+            return Session["AdminId"] != null;
+        }
+
+        private bool IsStudent()
+        {
+            return Session["StudentId"] != null;
+        }
+
         // GET: Students
         public ActionResult Index()
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền truy cập.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
             var students = db.Students
                     .ToList()
                     .OrderBy(s => s.FullName.Split(' ').Last())
@@ -25,14 +40,19 @@ namespace TrainingCenter.Controllers
         // GET: Students/Dashboard
         public ActionResult Dashboard()
         {
-            if (Session["StudentId"] == null)
+            if (!IsStudent())
             {
+                if (IsAdmin())
+                {
+                    return RedirectToAction("Dashboard", "Admins");
+                }
+                TempData["Message"] = "Vui lòng đăng nhập.";
+                TempData["MessageType"] = "error";
                 return RedirectToAction("Login", "Account");
             }
 
             int studentId = (int)Session["StudentId"];
             var student = db.Students.Find(studentId);
-
             if (student == null)
             {
                 TempData["Message"] = "Không tìm thấy học viên.";
@@ -62,22 +82,30 @@ namespace TrainingCenter.Controllers
                     })
                     .ToList()
             };
-
             return View(model);
         }
-
 
         // GET: Students/Details/5
         public ActionResult Details(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền truy cập.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                TempData["Message"] = "Yêu cầu không hợp lệ.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
             }
             Student student = db.Students.Find(id);
             if (student == null)
             {
-                return HttpNotFound();
+                TempData["Message"] = "Học viên không tồn tại.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
             }
             return View(student);
         }
@@ -85,6 +113,12 @@ namespace TrainingCenter.Controllers
         // GET: Students/Create
         public ActionResult Create()
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền tạo học viên.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
             return View(new Student());
         }
 
@@ -95,6 +129,12 @@ namespace TrainingCenter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "StudentId,FullName,Dob,PhoneNumber,Email,Username,Password")] Student student)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền tạo học viên.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
             if (ModelState.IsValid)
             {
                 if (db.Students.Any(s => s.PhoneNumber == student.PhoneNumber))
@@ -122,7 +162,7 @@ namespace TrainingCenter.Controllers
                     db.SaveChanges();
                     TempData["Message"] = "Tạo học viên thành công!";
                     TempData["MessageType"] = "success";
-                    return RedirectToAction("Index"); // Chuyển hướng về Index
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
@@ -132,7 +172,6 @@ namespace TrainingCenter.Controllers
                 }
             }
 
-            // Lấy lỗi validation
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
             TempData["Message"] = "Dữ liệu không hợp lệ: " + string.Join("; ", errors);
             TempData["MessageType"] = "error";
@@ -146,18 +185,22 @@ namespace TrainingCenter.Controllers
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction("Index");
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Index");
             }
-
             Student student = db.Students.Find(id);
             if (student == null)
             {
                 TempData["Message"] = "Học viên không tồn tại.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction("Index");
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Index");
+            }
+            if (!IsAdmin() && (!IsStudent() || (int)Session["StudentId"] != id))
+            {
+                TempData["Message"] = "Bạn không có quyền chỉnh sửa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
             }
 
-            // Lưu trữ URL trang trước đó
             string returnUrl = Request.UrlReferrer?.AbsolutePath;
             if (returnUrl != null)
             {
@@ -181,10 +224,9 @@ namespace TrainingCenter.Controllers
             }
             else
             {
-                ViewBag.ReturnAction = "Index";
-                TempData["ReturnAction"] = "Index";
+                ViewBag.ReturnAction = IsStudent() ? "Dashboard" : "Index";
+                TempData["ReturnAction"] = IsStudent() ? "Dashboard" : "Index";
             }
-
             return View(student);
         }
 
@@ -193,18 +235,23 @@ namespace TrainingCenter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "StudentId,FullName,Dob,PhoneNumber,Email,Username,Password")] Student student)
         {
+            if (!IsAdmin() && (!IsStudent() || (int)Session["StudentId"] != student.StudentId))
+            {
+                TempData["Message"] = "Bạn không có quyền chỉnh sửa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
             if (ModelState.IsValid)
             {
-                // Kiểm tra trùng Email hoặc Username (trừ học viên hiện tại)
-                if (db.Students.Any(s => s.Email == student.Email && s.StudentId != student.StudentId))
-                {
-                    TempData["Message"] = "Cập nhật thất bại: Email đã được sử dụng.";
-                    TempData["MessageType"] = "error";
-                    return View(student);
-                }
                 if (db.Students.Any(s => s.PhoneNumber == student.PhoneNumber && s.StudentId != student.StudentId))
                 {
                     TempData["Message"] = "Cập nhật thất bại: Số điện thoại đã được sử dụng.";
+                    TempData["MessageType"] = "error";
+                    return View(student);
+                }
+                if (db.Students.Any(s => s.Email == student.Email && s.StudentId != student.StudentId))
+                {
+                    TempData["Message"] = "Cập nhật thất bại: Email đã được sử dụng.";
                     TempData["MessageType"] = "error";
                     return View(student);
                 }
@@ -222,8 +269,7 @@ namespace TrainingCenter.Controllers
                     TempData["Message"] = "Cập nhật học viên thành công!";
                     TempData["MessageType"] = "success";
 
-                    // Chuyển hướng dựa trên trang trước đó
-                    string returnAction = TempData["ReturnAction"]?.ToString() ?? "Index";
+                    string returnAction = TempData["ReturnAction"]?.ToString() ?? (IsStudent() ? "Dashboard" : "Index");
                     if (returnAction == "Details")
                     {
                         int? returnId = TempData["ReturnId"] as int?;
@@ -246,7 +292,6 @@ namespace TrainingCenter.Controllers
                 }
             }
 
-            // Lấy lỗi validation
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
             TempData["Message"] = "Dữ liệu không hợp lệ: " + string.Join("; ", errors);
             TempData["MessageType"] = "error";
@@ -256,13 +301,18 @@ namespace TrainingCenter.Controllers
         // GET: Students/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền xóa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
             if (id == null)
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("Index");
             }
-
             Student student = db.Students.Find(id);
             if (student == null)
             {
@@ -270,7 +320,6 @@ namespace TrainingCenter.Controllers
                 TempData["MessageType"] = "error";
                 return RedirectToAction("Index");
             }
-
             return View(student);
         }
 
@@ -279,6 +328,12 @@ namespace TrainingCenter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền xóa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
             Student student = db.Students.Find(id);
             if (student == null)
             {

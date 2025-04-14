@@ -56,10 +56,10 @@ namespace TrainingCenter.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Display(Name = "Quyền")]
-        [Column("role")]
-        [Required]
-        public string Role { get; set; } = "student";
+        //[Display(Name = "Quyền")]
+        //[Column("role")]
+        //[Required]
+        //public string Role { get; set; } = "student";
 
         public virtual ICollection<Enrollment> Enrollments { get; set; }
     }

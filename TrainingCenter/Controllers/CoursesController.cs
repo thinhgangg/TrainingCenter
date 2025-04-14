@@ -11,9 +11,21 @@ namespace TrainingCenter.Controllers
     {
         private TrainingCenterContext db = new TrainingCenterContext();
 
+        private bool IsAdmin()
+        {
+            return Session["AdminId"] != null;
+        }
+
         // GET: Courses
         public ActionResult Index()
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             return View(db.Courses.ToList());
         }
 

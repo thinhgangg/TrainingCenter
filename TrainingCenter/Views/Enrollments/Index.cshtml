@@ -7,10 +7,13 @@
 <h2>Danh sách khóa học</h2>
 <hr />
 
-<div class="d-flex justify-content-end mb-3">
-    <a href="@Url.Action("Create", "Enrollments", new { returnUrl = Url.Action("Index", "Enrollments") })" class="btn btn-success">
-        <i class="fas fa-plus"></i> Thêm mới
-    </a>
+<div class="d-flex justify-content-between mb-3">
+    <div>
+        @Html.ActionLink("Quay lại", "Dashboard", "Admins", null, new { @class = "btn btn-secondary" })
+    </div>
+    <div>
+        <a href="@Url.Action("Create", "Enrollments", new { returnUrl = Url.Action("Index", "Enrollments") })" class="btn btn-success"><i class="fas fa-plus"></i> Thêm mới</a>
+    </div>
 </div>
 
 <table class="table table-bordered">

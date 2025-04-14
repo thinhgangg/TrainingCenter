@@ -10,9 +10,21 @@ namespace TrainingCenter.Controllers
     {
         private TrainingCenterContext db = new TrainingCenterContext();
 
+        private bool IsAdmin()
+        {
+            return Session["AdminId"] != null;
+        }
+
         // GET: Enrollments
         public ActionResult Index()
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             var courses = db.Enrollments
                 .Include(e => e.Course)
                 .Select(e => e.Course)
@@ -21,7 +33,6 @@ namespace TrainingCenter.Controllers
 
             return View("Index", courses);
         }
-
 
         public ActionResult StudentsByCourse(int? id)
         {
@@ -73,7 +84,6 @@ namespace TrainingCenter.Controllers
         //    return View(enrollment);
         //}
 
-        // GET: Enrollments/Create
         // GET: Enrollments/Create
         public ActionResult Create(int? courseId, string returnUrl)
         {
