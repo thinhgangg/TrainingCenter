@@ -9,11 +9,29 @@
     <link href="~/Content/custom-alert.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    @{
+        bool isAdmin = Session["AdminId"] != null;
+        bool isStudent = Session["StudentId"] != null;
+    }
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
-            @Html.ActionLink("Trung tâm đào tạo", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @{
+                if (isAdmin)
+                {
+                    @Html.ActionLink("Trung tâm đào tạo", "Dashboard", "Admins", null, new { @class = "navbar-brand" })
+                }
+                else if (isStudent)
+                {
+                    @Html.ActionLink("Trung tâm đào tạo", "Dashboard", "Students", null, new { @class = "navbar-brand" })
+                }
+                else
+                {
+                    @Html.ActionLink("Trung tâm đào tạo", "Index", "Home", null, new { @class = "navbar-brand" })
+                }
+            }
+
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -44,7 +62,7 @@
     </nav>
     @if (ViewBag.IsHome != null && ViewBag.IsHome)
     {
-        @RenderBody()<!-- Không bọc trong .container -->
+        @RenderBody()
         <div class="container body-content">
             <hr />
             <footer>

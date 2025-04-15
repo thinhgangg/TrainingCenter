@@ -70,25 +70,6 @@ namespace TrainingCenter.Controllers
             return View(enrollments);
         }
 
-        // GET: Enrollments/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    var enrollment = db.Enrollments
-        //        .Include(e => e.Course)
-        //        .Include(e => e.Student)
-        //        .FirstOrDefault(e => e.EnrollmentId == id);
-
-        //    if (enrollment == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(enrollment);
-        //}
-
         // GET: Enrollments/Create
         public ActionResult Create(int? courseId, string returnUrl)
         {
@@ -216,41 +197,6 @@ namespace TrainingCenter.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View(enrollment);
         }
-
-        //// GET: Enrollments/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Enrollment enrollment = db.Enrollments.Find(id);
-        //    if (enrollment == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", enrollment.CourseId);
-        //    ViewBag.StudentId = new SelectList(db.Students, "StudentId", "FullName", enrollment.StudentId);
-        //    return View(enrollment);
-        //}
-
-        //// POST: Enrollments/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "EnrollmentId,StudentId,CourseId,RegisterDate")] Enrollment enrollment)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(enrollment).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", enrollment.CourseId);
-        //    ViewBag.StudentId = new SelectList(db.Students, "StudentId", "FullName", enrollment.StudentId);
-        //    return View(enrollment);
-        //}
 
         // GET: Enrollments/Delete/5
         public ActionResult Delete(int? id)
