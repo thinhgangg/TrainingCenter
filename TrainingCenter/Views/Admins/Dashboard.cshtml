@@ -23,49 +23,87 @@
     <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
 }
 
-<div class="row">
+<div class="row text-white">
     <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5>Số học viên</h5>
-                <p>@Model.StudentCount</p>
+        <div class="card bg-primary mb-4 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-user-graduate fa-2x mb-2"></i>
+                <h5 class="card-title">Học viên</h5>
+                <h4>@Model.StudentCount</h4>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5>Số khóa học</h5>
-                <p>@Model.CourseCount</p>
+        <div class="card bg-success mb-4 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-book-open fa-2x mb-2"></i>
+                <h5 class="card-title">Khóa học</h5>
+                <h4>@Model.CourseCount</h4>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5>Số đăng ký</h5>
-                <p>@Model.EnrollmentCount</p>
+        <div class="card bg-warning mb-4 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-file-signature fa-2x mb-2"></i>
+                <h5 class="card-title">Đăng ký</h5>
+                <h4>@Model.EnrollmentCount</h4>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5>Khóa học đang mở</h5>
-                <p>@Model.OpenCourses</p>
+        <div class="card bg-info mb-4 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-door-open fa-2x mb-2"></i>
+                <h5 class="card-title">Đang mở</h5>
+                <h4>@Model.OpenCourses</h4>
             </div>
         </div>
     </div>
 </div>
 
+
 <div class="mt-4">
     <h3>Quản lý</h3>
-    <div class="list-group">
-        @Html.ActionLink("Quản lý học viên", "Index", "Students", null, new { @class = "list-group-item list-group-item-action" })
-        @Html.ActionLink("Quản lý khóa học", "Index", "Courses", null, new { @class = "list-group-item list-group-item-action" })
-        @Html.ActionLink("Quản lý đăng ký", "Index", "Enrollments", null, new { @class = "list-group-item list-group-item-action" })
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <a href="@Url.Action("Index", "Students")" class="text-decoration-none text-dark">
+                <div class="card text-center shadow-sm h-100">
+                    <div class="card-body">
+                        <i class="fas fa-user-graduate fa-2x mb-2 text-primary"></i>
+                        <h5 class="card-title">Học viên</h5>
+                        <p class="card-text small text-muted">Xem và chỉnh sửa danh sách học viên.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <a href="@Url.Action("Index", "Courses")" class="text-decoration-none text-dark">
+                <div class="card text-center shadow-sm h-100">
+                    <div class="card-body">
+                        <i class="fas fa-book-open fa-2x mb-2 text-success"></i>
+                        <h5 class="card-title">Khóa học</h5>
+                        <p class="card-text small text-muted">Quản lý thông tin các khóa học.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <a href="@Url.Action("Index", "Enrollments")" class="text-decoration-none text-dark">
+                <div class="card text-center shadow-sm h-100">
+                    <div class="card-body">
+                        <i class="fas fa-file-signature fa-2x mb-2 text-danger"></i>
+                        <h5 class="card-title">Đăng ký</h5>
+                        <p class="card-text small text-muted">Xem và quản lý các lượt đăng ký.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

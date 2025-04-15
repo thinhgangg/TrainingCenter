@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<TrainingCenter.Models.Course>
 
 @{
-    ViewBag.Title = "Danh sách khóa học";
+    ViewBag.Title = "Danh sách đăng ký khóa học";
 }
 
-<h2>Danh sách khóa học</h2>
+<h2>Danh sách đăng ký khóa học</h2>
 <hr />
 
 <div class="d-flex justify-content-between mb-3">
@@ -16,12 +16,23 @@
     </div>
 </div>
 
-<table class="table table-bordered">
+<table class="table table-hover align-middle">
+    <colgroup>
+        <col style="width: 30%;">
+        <col style="width: 20%;">
+        <col style="width: 15%;">
+        <col style="width: 15%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+    </colgroup>
     <thead>
         <tr>
             <th>Tên khóa học</th>
             <th>Giảng viên</th>
-            <th style="width: 16%;"></th>
+            <th>Ngày bắt đầu</th>
+            <th>Học phí</th>
+            <th>Số lượng</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
@@ -30,8 +41,13 @@
             <tr>
                 <td>@item.CourseName</td>
                 <td>@item.Instructor</td>
+                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                <td>@String.Format("{0:N0} VNĐ", item.Fee)</td>
+                <td>@item.EnrolledCount / @(item.MaxStudents.HasValue ? item.MaxStudents.Value.ToString() : "Không giới hạn")</td>
                 <td>
-                    @Html.ActionLink("Xem danh sách học viên", "StudentsByCourse", "Enrollments", new { id = item.CourseId }, new { @class = "btn btn-info" })
+                    <a href="@Url.Action("StudentsByCourse", "Enrollments", new { id = item.CourseId })" class="btn" title="Xem danh sách học viên">
+                        <i class="fas fa-list"></i>
+                    </a>
                 </td>
             </tr>
         }

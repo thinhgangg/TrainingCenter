@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<table class="table">
+<table class="table table-hover align-middle">
     <tr>
         <th>@Html.DisplayNameFor(model => model.CourseName)</th>
         <th>@Html.DisplayNameFor(model => model.Instructor)</th>
@@ -39,17 +39,21 @@
             <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
             <td>@String.Format("{0:N0} VNĐ", item.Fee)</td>
             <td>@Html.DisplayFor(modelItem => item.MaxStudents)</td>
-            <td>
-                <a href="@Url.Action("Edit", new { id = item.CourseId })" class="btn btn-sm btn-primary me-1" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <a href="@Url.Action("Details", new { id = item.CourseId })" class="btn btn-sm btn-info me-1" title="Chi tiết">
-                    <i class="fas fa-info-circle"></i>
-                </a>
-                <a href="@Url.Action("Delete", new { id = item.CourseId })" class="btn btn-sm btn-danger" title="Xóa">
-                    <i class="fas fa-trash-alt"></i>
-                </a>
+            <td class="text-center">
+                <div class="d-flex justify-content-center gap-1">
+                    <a href="@Url.Action("Edit", new { id = item.CourseId })" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="@Url.Action("Details", new { id = item.CourseId })" class="btn btn-sm btn-outline-info" title="Chi tiết">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a href="@Url.Action("Delete", new { id = item.CourseId })" class="btn btn-sm btn-outline-danger" title="Xóa"
+                       onclick="return confirm('Bạn có chắc chắn muốn xóa khóa học này?');">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
             </td>
+
 
         </tr>
     }

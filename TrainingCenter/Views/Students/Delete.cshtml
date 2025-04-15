@@ -6,7 +6,11 @@
 
 <h2>Xóa học viên</h2>
 
-<h3>Bạn có chắc chắn muốn xóa học viên này?</h3>
+@if (TempData["Message"] != null)
+{
+    <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
+}
+
 <div>
     <hr />
     <dl class="dl-horizontal">

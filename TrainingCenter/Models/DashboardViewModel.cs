@@ -14,4 +14,4 @@ namespace TrainingCenter.Models
         public Course Course { get; set; }
         public int EnrolledCount { get; set; }
     }
-}
+}   

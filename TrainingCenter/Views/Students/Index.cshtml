@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<table class="table">
+<table class="table table-hover align-middle">
     <tr>
         <th>@Html.DisplayNameFor(model => model.FullName)</th>
         <th>@Html.DisplayNameFor(model => model.Dob)</th>
@@ -36,24 +36,24 @@
     {
         <tr>
             <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-            <td>@item.Dob.ToString("dd/MM/yyyy")</td>
+            <td>@item.Dob.ToString("dd/MM/yyyy")</td>   
             <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
             <td>@Html.DisplayFor(modelItem => item.Email)</td>
             <td>@Html.DisplayFor(modelItem => item.Username)</td>
-            <td>@Html.DisplayFor(modelItem => item.Password)</td>
-            <td>
-                <a href="@Url.Action("Edit", new { id = item.StudentId })" class="btn btn-sm btn-primary me-1" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <a href="@Url.Action("Details", new { id = item.StudentId })" class="btn btn-sm btn-info me-1" title="Chi tiết">
-                    <i class="fas fa-info-circle"></i>
-                </a>
-                <a href="@Url.Action("Delete", new { id = item.StudentId })" class="btn btn-sm btn-danger" title="Xóa">
-                    <i class="fas fa-trash-alt"></i>
-                </a>
+            <td><span class="text-muted">••••••</span></td>
+            <td class="text-center">
+                <div class="d-flex justify-content-center gap-1">
+                    <a href="@Url.Action("Edit", new { id = item.StudentId })" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="@Url.Action("Details", new { id = item.StudentId })" class="btn btn-sm btn-outline-info" title="Chi tiết">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a href="@Url.Action("Delete", new { id = item.StudentId })" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa học viên này?');">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
             </td>
-
-
         </tr>
     }
 </table>

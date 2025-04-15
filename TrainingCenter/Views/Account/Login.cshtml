@@ -3,29 +3,62 @@
     ViewBag.Title = "Đăng nhập";
 }
 
-<h2>Đăng nhập</h2>
-<hr />
+<div class="login-container">
+    <h2>Đăng nhập</h2>
 
-@if (TempData["Message"] != null)
-{
-    <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
-}
+    @if (TempData["Message"] != null)
+    {
+        <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
+    }
 
-@using (Html.BeginForm("Login", "Account", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Username)
-        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Username)
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Username)
+            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Username)
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password)
-        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Password)
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
 
-    <button type="submit" class="btn btn-primary">Đăng nhập</button>
-}
+        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+    }
+
+    <p class="register-link">
+        Chưa có tài khoản? @Html.ActionLink("Đăng ký", "Register", "Account")
+    </p>
+</div>
+
+<style>
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .form-group {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .register-link {
+        margin-top: 10px;
+        text-align: center;
+    }
+</style>

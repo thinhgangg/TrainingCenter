@@ -7,6 +7,11 @@
 <h2>Thông tin học viên</h2>
 <hr />
 
+@if (TempData["Message"] != null)
+{
+    <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
+}
+
 <div class="d-flex justify-content-start mt-3 mb-3">
     @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-secondary" })
 </div>

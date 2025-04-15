@@ -16,6 +16,11 @@ namespace TrainingCenter.Controllers
             return Session["AdminId"] != null;
         }
 
+        private bool IsStudent()
+        {
+            return Session["StudentId"] != null;
+        }
+
         // GET: Courses
         public ActionResult Index()
         {
@@ -160,10 +165,25 @@ namespace TrainingCenter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền xóa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+            }
+
             Course course = db.Courses.Find(id);
             if (course == null)
             {
                 TempData["Message"] = "Khóa học không tồn tại hoặc đã bị xóa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
+            }
+
+            var hasEnrollments = db.Enrollments.Any(e => e.CourseId == id);
+            if (hasEnrollments)
+            {
+                TempData["Message"] = "Không thể xóa vì khóa học đang được sử dụng.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("Index");
             }
@@ -176,9 +196,9 @@ namespace TrainingCenter.Controllers
                 TempData["MessageType"] = "success";
                 return RedirectToAction("Index");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Message"] = "Xóa thất bại: Có lỗi xảy ra, có thể khóa học đang được sử dụng.";
+                TempData["Message"] = "Xóa thất bại: " + (ex.InnerException?.Message ?? ex.Message);
                 TempData["MessageType"] = "error";
                 return View(course);
             }

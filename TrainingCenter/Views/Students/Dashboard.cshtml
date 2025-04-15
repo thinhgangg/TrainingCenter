@@ -1,5 +1,9 @@
 ﻿@model TrainingCenter.Models.DashboardViewModel
 
+@{
+    ViewBag.Title = "Trung tâm đào tạo";
+}
+
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Chào mừng, @Model.Student.FullName!</h2>
     <div class="dropdown">
@@ -22,7 +26,7 @@
 <h4>Danh sách khóa học đã đăng ký:</h4>
 @if (Model.EnrolledCourses != null && Model.EnrolledCourses.Count > 0)
 {
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover align-middle">
         <colgroup>
             <col style="width: 30%;">
             <col style="width: 20%;">
@@ -53,7 +57,7 @@
                     <td class="text-center">
                         <form action="@Url.Action("CancelEnrollment", "Enrollments", new { courseId = item.Course.CourseId, studentId = Model.Student.StudentId })" method="post" style="display:inline-block;">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-link text-danger p-0" title="Hủy đăng ký">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Hủy đăng ký">
                                 <i class="fas fa-times-circle fa-lg"></i>
                             </button>
                         </form>
@@ -71,7 +75,7 @@ else
 <h4>Danh sách khóa học đang mở đăng ký:</h4>
 @if (Model.OpenCourses != null && Model.OpenCourses.Any())
 {
-    <table class="table table-bordered  ">
+    <table class="table table-bordered table-hover align-middle">
         <colgroup>
             <col style="width: 30%;">
             <col style="width: 20%;">
@@ -100,18 +104,12 @@ else
                     <td class="text-center">@String.Format("{0:N0} VNĐ", item.Course.Fee)</td>
                     <td class="text-center">@item.EnrolledCount / @(item.Course.MaxStudents.HasValue ? item.Course.MaxStudents.Value.ToString() : "Không giới hạn")</td>
                     <td class="text-center">
-                        @*<form action="@Url.Action("Register", "Enrollments", new { courseId = item.Course.CourseId })" method="post" style="display:inline-block;">
-                                <input type="hidden" name="studentId" value="@Model.Student.StudentId" />
-                                <button type="submit" class="btn btn-link text-primary p-0" title="Đăng ký">
-                                    <i class="fas fa-plus-circle fa-lg"></i>
-                                </button>
-                            </form>*@
                         @if (Model.Student != null)
                         {
                             <form action="@Url.Action("Register", "Enrollments", new { courseId = item.Course.CourseId })" method="post" style="display:inline-block;">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="studentId" value="@Model.Student.StudentId" />
-                                <button type="submit" class="btn btn-link text-primary p-0" title="Đăng ký">
+                                <button type="submit" class="btn btn-sm btn-outline-primary" title="Đăng ký">
                                     <i class="fas fa-plus-circle fa-lg"></i>
                                 </button>
                             </form>

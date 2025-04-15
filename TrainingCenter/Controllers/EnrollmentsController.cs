@@ -31,6 +31,11 @@ namespace TrainingCenter.Controllers
                 .Distinct()
                 .ToList();
 
+            foreach (var course in courses)
+            {
+                course.EnrolledCount = db.Enrollments.Count(e => e.CourseId == course.CourseId);
+            }
+
             return View("Index", courses);
         }
 

@@ -6,6 +6,11 @@
 
 <h2>Xóa khóa học</h2>
 
+@if (TempData["Message"] != null)
+{
+    <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
+}
+
 <div>
     <hr />
     <dl class="dl-horizontal">

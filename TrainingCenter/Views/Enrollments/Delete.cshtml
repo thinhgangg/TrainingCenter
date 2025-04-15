@@ -6,6 +6,11 @@
 
 <h2>Xóa đăng ký khóa học</h2>
 
+@if (TempData["Message"] != null)
+{
+    <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
+}
+
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -45,12 +50,12 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-            <div class="form-group mt-3">
-                <div class="col-md-offset-2 col-md-10">
-                    <button type="submit" class="btn btn-danger">Xóa</button>
+        <div class="form-group mt-3">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-danger">Xóa</button>
 
-                    @Html.ActionLink("Hủy bỏ", "StudentsByCourse", "Enrollments", new { id = ViewBag.CourseId }, new { @class = "btn btn-secondary" })
-                </div>
+                @Html.ActionLink("Hủy bỏ", "StudentsByCourse", "Enrollments", new { id = ViewBag.CourseId }, new { @class = "btn btn-secondary" })
             </div>
+        </div>
     }
 </div>

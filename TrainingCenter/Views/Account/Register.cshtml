@@ -3,41 +3,81 @@
     ViewBag.Title = "Đăng ký";
 }
 
-<h2>Đăng ký tài khoản học viên</h2>
+<div class="register-container">
+    <h2>Đăng ký</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.FullName)
-        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FullName)
+            @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.FullName)
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Dob)
-        @Html.TextBoxFor(m => m.Dob, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Dob)
+            @Html.TextBoxFor(m => m.Dob, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Dob)
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.PhoneNumber)
-        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.PhoneNumber)
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.PhoneNumber)
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email)
-        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Username)
-        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Username)
+            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Username)
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password)
-        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
 
-    <button type="submit" class="btn btn-success">Đăng ký</button>
-}
+        <button type="submit" class="btn btn-success">Đăng ký</button>
+    }
+
+    <p class="login-link">
+        Đã có tài khoản? @Html.ActionLink("Đăng nhập", "Login", "Account")
+    </p>
+</div>
+
+<style>
+    .register-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .form-group {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .btn-success {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .login-link {
+        margin-top: 15px;
+        text-align: center;
+    }
+</style>

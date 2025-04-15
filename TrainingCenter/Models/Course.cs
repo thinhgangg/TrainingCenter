@@ -32,6 +32,8 @@ namespace TrainingCenter.Models
         [Column("max_students")]
         public int? MaxStudents { get; set; }
 
+        [NotMapped]
+        public int EnrolledCount { get; set; }
         public virtual ICollection<Enrollment> Enrollments { get; set; }
     }
 }

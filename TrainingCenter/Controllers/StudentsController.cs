@@ -26,10 +26,11 @@ namespace TrainingCenter.Controllers
         {
             if (!IsAdmin())
             {
-                TempData["Message"] = "Bạn không có quyền truy cập.";
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+                return RedirectToAction("Login", "Account");
             }
+
             var students = db.Students
                     .ToList()
                     .OrderBy(s => s.FullName.Split(' ').Last())
@@ -334,10 +335,19 @@ namespace TrainingCenter.Controllers
                 TempData["MessageType"] = "error";
                 return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
             }
+
             Student student = db.Students.Find(id);
             if (student == null)
             {
                 TempData["Message"] = "Học viên không tồn tại hoặc đã bị xóa.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
+            }
+
+            var hasEnrollments = db.Enrollments.Any(e => e.StudentId == id);
+            if (hasEnrollments)
+            {
+                TempData["Message"] = "Không thể xóa vì học viên đang tham gia khóa học.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("Index");
             }
