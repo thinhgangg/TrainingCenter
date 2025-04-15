@@ -3,6 +3,11 @@
     ViewBag.IsHome = true;
 }
 
+@if (TempData["Message"] != null)
+{
+    <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
+}
+
 <section class="full-width-banner">
     <img src="~/Images/SlideShow01.png" alt="Home" class="banner-img" />
 </section>

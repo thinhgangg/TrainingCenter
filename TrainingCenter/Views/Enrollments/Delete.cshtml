@@ -4,58 +4,51 @@
     ViewBag.Title = "Xóa đăng ký khóa học";
 }
 
-<h2>Xóa đăng ký khóa học</h2>
-
 @if (TempData["Message"] != null)
 {
     <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
 }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Khóa học
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Course.CourseName)
-        </dd>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow rounded-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-user-times me-2"></i> Xóa đăng ký khóa học</h4>
+                </div>
 
-        <dt>
-            Giảng viên
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Course.Instructor)
-        </dd>
+                <div class="card-body">
 
-        <dt>
-            Học viên
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Student.FullName)
-        </dd>
+                    <dl class="row">
+                        <dt class="col-sm-4 fw-bold">Khóa học</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Course.CourseName)</dd>
 
-        <dt>
-            Ngày đăng ký
-        </dt>
-        <dd>
-            @Model.RegisterDate.ToString("dd/MM/yyyy")
-        </dd>
-    </dl>
+                        <dt class="col-sm-4 fw-bold">Giảng viên</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Course.Instructor)</dd>
 
-    <div class="alert alert-warning">
-        <strong>Bạn có chắc chắn muốn xóa đăng ký này?</strong>
-    </div>
+                        <dt class="col-sm-4 fw-bold">Học viên</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Student.FullName)</dd>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        <div class="form-group mt-3">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-danger">Xóa</button>
+                        <dt class="col-sm-4 fw-bold">Ngày đăng ký</dt>
+                        <dd class="col-sm-8">@Model.RegisterDate.ToString("dd/MM/yyyy")</dd>
+                    </dl>
 
-                @Html.ActionLink("Hủy bỏ", "StudentsByCourse", "Enrollments", new { id = ViewBag.CourseId }, new { @class = "btn btn-secondary" })
+                    <div class="alert alert-warning mt-4">
+                        <strong><i class="fas fa-exclamation-triangle me-2"></i>Bạn có chắc chắn muốn xóa đăng ký này?</strong>
+                    </div>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <button type="submit" class="btn btn-danger px-4">
+                                <i class="fas fa-trash-alt me-1"></i> Xóa
+                            </button>
+                            @Html.ActionLink("Hủy bỏ", "StudentsByCourse", "Enrollments", new { id = ViewBag.CourseId }, new { @class = "btn btn-outline-secondary" })
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-    }
+    </div>
 </div>

@@ -4,52 +4,67 @@
     ViewBag.Title = "Danh sách đăng ký khóa học";
 }
 
-<h2>Danh sách đăng ký khóa học</h2>
-<hr />
+@if (TempData["Message"] != null)
+{
+    <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
+}
 
-<div class="d-flex justify-content-between mb-3">
-    <div>
-        @Html.ActionLink("Quay lại", "Dashboard", "Admins", null, new { @class = "btn btn-secondary" })
-    </div>
-    <div>
-        <a href="@Url.Action("Create", "Enrollments", new { returnUrl = Url.Action("Index", "Enrollments") })" class="btn btn-success"><i class="fas fa-plus"></i> Thêm mới</a>
+<div class="container mt-4">
+    <div class="card shadow-sm rounded-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-clipboard-list me-2"></i> Danh sách đăng ký khóa học</h4>
+            <a href="@Url.Action("Create", "Enrollments", new { returnUrl = Url.Action("Index", "Enrollments") })" class="btn btn-light btn-sm">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div class="mb-3">
+                @Html.ActionLink("← Quay lại bảng điều khiển", "Dashboard", "Admins", null, new { @class = "btn btn-outline-secondary btn-sm" })
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên khóa học</th>
+                            <th>Giảng viên</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Học phí</th>
+                            <th>Số lượng</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int stt = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@stt</td>
+                                <td class="text-start">@item.CourseName</td>
+                                <td class="text-start">@item.Instructor</td>
+                                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.Fee)</td>
+                                <td>
+                                    <span class="badge bg-info text-dark">
+                                        @item.EnrolledCount / @(item.MaxStudents.HasValue ? item.MaxStudents.Value.ToString() : "∞")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("StudentsByCourse", "Enrollments", new { id = item.CourseId })"
+                                       class="btn btn-outline-primary btn-sm" title="Xem danh sách học viên">
+                                        <i class="fas fa-users"></i> Học viên
+                                    </a>
+                                </td>
+                            </tr>
+                            stt++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
-
-<table class="table table-hover align-middle">
-    <colgroup>
-        <col style="width: 30%;">
-        <col style="width: 20%;">
-        <col style="width: 15%;">
-        <col style="width: 15%;">
-        <col style="width: 10%;">
-        <col style="width: 10%;">
-    </colgroup>
-    <thead>
-        <tr>
-            <th>Tên khóa học</th>
-            <th>Giảng viên</th>
-            <th>Ngày bắt đầu</th>
-            <th>Học phí</th>
-            <th>Số lượng</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.CourseName</td>
-                <td>@item.Instructor</td>
-                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
-                <td>@String.Format("{0:N0} VNĐ", item.Fee)</td>
-                <td>@item.EnrolledCount / @(item.MaxStudents.HasValue ? item.MaxStudents.Value.ToString() : "Không giới hạn")</td>
-                <td>
-                    <a href="@Url.Action("StudentsByCourse", "Enrollments", new { id = item.CourseId })" class="btn" title="Xem danh sách học viên">
-                        <i class="fas fa-list"></i>
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>

@@ -4,73 +4,76 @@
     ViewBag.Title = "Chỉnh sửa thông tin khóa học";
 }
 
-<h2>Chỉnh sửa thông tin khóa học</h2>
-<hr />
-
 @if (TempData["Message"] != null)
 {
     <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
 }
 
-<div class="d-flex justify-content-start mt-3 mb-3">
-    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-secondary" })
-</div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="fas fa-edit me-2"></i> Chỉnh sửa thông tin khóa học</h4>
+                </div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+                <div class="card-body">
 
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.CourseId)
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CourseName, htmlAttributes: new { @class = "control-label col-md-2", style = "font-weight: bold" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CourseName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CourseName, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.CourseId)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Instructor, htmlAttributes: new { @class = "control-label col-md-2", style = "font-weight: bold" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Instructor, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Instructor, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.CourseName, new { @class = "form-label fw-bold" })
+                            @Html.TextBoxFor(m => m.CourseName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.CourseName, "", new { @class = "text-danger" })
+                        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2", style = "font-weight: bold" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Instructor, new { @class = "form-label fw-bold" })
+                            @Html.TextBoxFor(m => m.Instructor, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Instructor, "", new { @class = "text-danger" })
+                        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Fee, htmlAttributes: new { @class = "control-label col-md-2", style = "font-weight: bold" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Fee, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Fee, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.StartDate, new { @class = "form-label fw-bold" })
+                            @Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(m => m.StartDate, "", new { @class = "text-danger" })
+                        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.MaxStudents, htmlAttributes: new { @class = "control-label col-md-2", style = "font-weight: bold" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MaxStudents, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MaxStudents, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Fee, new { @class = "form-label fw-bold" })
+                            @Html.TextBoxFor(m => m.Fee, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Fee, "", new { @class = "text-danger" })
+                        </div>
 
-        <div class="form-group mt-3">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.MaxStudents, new { @class = "form-label fw-bold" })
+                            @Html.TextBoxFor(m => m.MaxStudents, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.MaxStudents, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            @if (ViewBag.ReturnAction == "Details")
+                            {
+                                @Html.ActionLink("← Quay lại", "Details", new { id = ViewBag.ReturnId }, new { @class = "btn btn-outline-secondary" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("← Quay lại", "Index", null, new { @class = "btn btn-outline-secondary" })
+                            }
+
+                            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-}
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

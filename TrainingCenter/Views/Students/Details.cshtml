@@ -4,73 +4,47 @@
     ViewBag.Title = "Thông tin học viên";
 }
 
-<h2>Thông tin học viên</h2>
-<hr />
-
 @if (TempData["Message"] != null)
 {
     <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
 }
 
-<div class="d-flex justify-content-start mt-3 mb-3">
-    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-secondary" })
-</div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-user-graduate me-2"></i> Thông tin học viên</h4>
+                </div>
 
-<div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
+                <div class="card-body">
 
-        <dd>
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
+                    <dl class="row">
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.FullName)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.FullName)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Dob)
-        </dt>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.Dob)</dt>
+                        <dd class="col-sm-8">@Model.Dob.ToString("dd/MM/yyyy")</dd>
 
-        <dd>
-            @Model.Dob.ToString("dd/MM/yyyy")
-        </dd>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PhoneNumber)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.Email)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.Username)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Username)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.Password)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Password)</dd>
+                    </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Username)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-
-    </dl>
-</div>
-
-<div class="form-group mt-3">
-    <div class="col-md-offset-2 col-md-10">
-        @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.StudentId }, new { @class = "btn btn-success" })
+                    <div class="d-flex justify-content-between mt-4">
+                        @Html.ActionLink("← Quay lại", "Index", null, new { @class = "btn btn-outline-secondary" })
+                        @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.StudentId }, new { @class = "btn btn-success" })
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

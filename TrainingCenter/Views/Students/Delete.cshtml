@@ -4,64 +4,55 @@
     ViewBag.Title = "Xóa học viên";
 }
 
-<h2>Xóa học viên</h2>
-
 @if (TempData["Message"] != null)
 {
     <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
 }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Dob)
-        </dt>
-        <dd>
-            @Model.Dob.ToString("dd/MM/yyyy")
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Username)
-        </dd>
-    </dl>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow rounded-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-user-times me-2"></i> Xóa học viên</h4>
+                </div>
 
-    <div class="alert alert-warning">
-        <strong>Bạn có chắc chắn muốn xóa học viên này?</strong>
-    </div>
+                <div class="card-body">
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+                    <dl class="row">
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.FullName)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.FullName)</dd>
 
-        <div class="form-group mt-3">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Xóa" class="btn btn-danger" />
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.Dob)</dt>
+                        <dd class="col-sm-8">@Model.Dob.ToString("dd/MM/yyyy")</dd>
 
-                @Html.ActionLink("Hủy bỏ", "Index", null, new { @class = "btn btn-secondary" })
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.Email)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
+
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(model => model.Username)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Username)</dd>
+                    </dl>
+
+                    <div class="alert alert-warning mt-4">
+                        <strong><i class="fas fa-exclamation-triangle me-2"></i>Bạn có chắc chắn muốn xóa học viên này?</strong>
+                    </div>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <input type="submit" value="Xóa" class="btn btn-danger px-4" />
+                            @Html.ActionLink("Hủy bỏ", "Index", null, new { @class = "btn btn-outline-secondary" })
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-    }
+    </div>
 </div>
 
 @section Scripts {

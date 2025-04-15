@@ -4,72 +4,52 @@
     ViewBag.Title = "Xóa khóa học";
 }
 
-<h2>Xóa khóa học</h2>
-
 @if (TempData["Message"] != null)
 {
     <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
 }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CourseName)
-        </dt>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow rounded-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-trash-alt me-2"></i> Xóa khóa học</h4>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.CourseName)
-        </dd>
+                <div class="card-body">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Instructor)
-        </dt>
+                    <dl class="row">
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(m => m.CourseName)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.CourseName)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Instructor)
-        </dd>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(m => m.Instructor)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.Instructor)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(m => m.StartDate)</dt>
+                        <dd class="col-sm-8">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
 
-        <dd>
-            @Model.StartDate.ToString("dd/MM/yyyy")
-        </dd>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(m => m.Fee)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.Fee)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Fee)
-        </dt>
+                        <dt class="col-sm-4 fw-bold">@Html.DisplayNameFor(m => m.MaxStudents)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.MaxStudents)</dd>
+                    </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.Fee)
-        </dd>
+                    <div class="alert alert-warning mt-4">
+                        <strong><i class="fas fa-exclamation-triangle me-2"></i>Bạn có chắc chắn muốn xóa khóa học này?</strong>
+                    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MaxStudents)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MaxStudents)
-        </dd>
-
-    </dl>
-
-    <div class="alert alert-warning">
-        <strong>Bạn có chắc chắn muốn xóa khóa học này?</strong>
-    </div>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-group mt-3">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Xóa" class="btn btn-danger" />
-
-                @Html.ActionLink("Hủy bỏ", "Index", null, new { @class = "btn btn-secondary" })
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <input type="submit" value="Xóa" class="btn btn-danger px-4" />
+                            @Html.ActionLink("Hủy bỏ", "Index", null, new { @class = "btn btn-outline-secondary" })
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-    }
+    </div>
 </div>

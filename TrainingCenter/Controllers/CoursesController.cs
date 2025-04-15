@@ -97,15 +97,51 @@ namespace TrainingCenter.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                TempData["Message"] = "Yêu cầu không hợp lệ.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
             }
+
             Course course = db.Courses.Find(id);
             if (course == null)
             {
-                return HttpNotFound();
+                TempData["Message"] = "Khóa học không tồn tại.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index");
             }
+
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Bạn không có quyền chỉnh sửa khóa học.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index", "Courses");
+            }
+
+            string returnUrl = Request.UrlReferrer?.AbsolutePath;
+            if (returnUrl != null)
+            {
+                if (returnUrl.Contains("/Courses/Details"))
+                {
+                    ViewBag.ReturnAction = "Details";
+                    ViewBag.ReturnId = id;
+                    TempData["ReturnAction"] = "Details";
+                    TempData["ReturnId"] = id;
+                }
+                else
+                {
+                    ViewBag.ReturnAction = "Index";
+                    TempData["ReturnAction"] = "Index";
+                }
+            }
+            else
+            {
+                ViewBag.ReturnAction = "Index";
+                TempData["ReturnAction"] = "Index";
+            }
+
             return View(course);
         }
+
 
         // POST: Courses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
