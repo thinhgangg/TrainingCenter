@@ -1,0 +1,61 @@
+﻿@model IEnumerable<TrainingCenter.Models.Enrollment>
+@using System.Linq
+
+@{
+    ViewBag.Title = "Các khóa học đã đăng ký";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm rounded-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-book me-2"></i> Các khóa học đã đăng ký của: <strong>@ViewBag.StudentName</strong></h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-3">
+                @Html.ActionLink("← Quay lại thông tin học viên", "Details", "Students", new { id = ViewBag.StudentId }, new { @class = "btn btn-outline-secondary btn-sm" })
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-warning text-center">Học viên chưa đăng ký khóa học nào.</div>
+            }
+            else
+            {
+                <div class="d-flex justify-content-center">
+                    <div style="min-width: 500px; max-width: 720px; width: 100%;">
+                        <table class="table table-bordered table-hover text-center align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th class="text-start">Tên khóa học</th>
+                                    <th>Ngày đăng ký</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int stt = 1;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@stt</td>
+                                        <td class="text-start">@item.Course.CourseName</td>
+                                        <td>@item.RegisterDate.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                    stt++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

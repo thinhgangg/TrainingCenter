@@ -92,6 +92,12 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -193,14 +199,17 @@
     </Compile>
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Models\Admin.cs" />
-    <Compile Include="Models\AdminDashboardViewModel.cs" />
+    <Compile Include="Models\ViewModels\AdminDashboardViewModel.cs" />
     <Compile Include="Models\Course.cs" />
-    <Compile Include="Models\DashboardViewModel.cs" />
+    <Compile Include="Models\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Models\DbInitializer.cs" />
     <Compile Include="Models\Enrollment.cs" />
-    <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\TrainingCenterContext.cs" />
+    <Compile Include="Models\ViewModels\Statistics\RevenueFilterViewModel.cs" />
+    <Compile Include="Models\ViewModels\Statistics\RevenueStatisticViewModel.cs" />
+    <Compile Include="Models\ViewModels\Statistics\StudentCountStatisticViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +230,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\custom-alert.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -273,6 +283,10 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Students\Dashboard.cshtml" />
     <Content Include="Views\Admins\Dashboard.cshtml" />
+    <Content Include="Views\Enrollments\CoursesByStudent.cshtml" />
+    <Content Include="Views\Admins\RevenueStatistics.cshtml" />
+    <Content Include="Views\Admins\StudentCountStatistics.cshtml" />
+    <Content Include="Views\Admins\RevenueByMonth.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

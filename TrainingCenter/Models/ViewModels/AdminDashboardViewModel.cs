@@ -7,5 +7,6 @@
         public int CourseCount { get; set; }
         public int EnrollmentCount { get; set; }
         public int OpenCourses { get; set; }
+        public int ClosedCourses { get; set; }
     }
 }

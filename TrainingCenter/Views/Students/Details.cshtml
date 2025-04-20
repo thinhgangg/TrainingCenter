@@ -41,7 +41,7 @@
 
                     <div class="d-flex justify-content-between mt-4">
                         @Html.ActionLink("← Quay lại", "Index", null, new { @class = "btn btn-outline-secondary" })
-                        @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.StudentId }, new { @class = "btn btn-success" })
+                        @Html.ActionLink("Xem khóa học đã đăng ký", "CoursesByStudent", "Enrollments", new { id = Model.StudentId }, new { @class = "btn btn-primary" })
                     </div>
                 </div>
             </div>

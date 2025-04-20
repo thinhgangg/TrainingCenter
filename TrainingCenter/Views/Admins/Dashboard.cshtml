@@ -11,7 +11,6 @@
             <i class="fas fa-user-circle me-1"></i> Tài khoản
         </button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            @*<li><a class="dropdown-item" href="@Url.Action("Edit", "Students", new { id = Model.Student.StudentId })"><i class="fas fa-user-edit me-2"></i> Thay đổi thông tin</a></li>*@
             <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a></li>
         </ul>
     </div>
@@ -23,52 +22,64 @@
     <div class="custom-alert custom-alert-@TempData["MessageType"]">@TempData["Message"]</div>
 }
 
-<div class="row text-white">
-    <div class="col-md-3">
-        <div class="card bg-primary mb-4 shadow-sm">
-            <div class="card-body text-center">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 text-white">
+    <div class="col">
+        <div class="card bg-primary shadow-sm text-center">
+            <div class="card-body">
                 <i class="fas fa-user-graduate fa-2x mb-2"></i>
-                <h5 class="card-title">Học viên</h5>
+                <h6 class="card-title">Học viên</h6>
                 <h4>@Model.StudentCount</h4>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-success mb-4 shadow-sm">
-            <div class="card-body text-center">
+
+    <div class="col">
+        <div class="card bg-success shadow-sm text-center">
+            <div class="card-body">
                 <i class="fas fa-book-open fa-2x mb-2"></i>
-                <h5 class="card-title">Khóa học</h5>
+                <h6 class="card-title">Khóa học</h6>
                 <h4>@Model.CourseCount</h4>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-warning mb-4 shadow-sm">
-            <div class="card-body text-center">
+
+    <div class="col">
+        <div class="card bg-warning shadow-sm text-center text-dark">
+            <div class="card-body">
                 <i class="fas fa-file-signature fa-2x mb-2"></i>
-                <h5 class="card-title">Đăng ký</h5>
+                <h6 class="card-title">Đăng ký</h6>
                 <h4>@Model.EnrollmentCount</h4>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-info mb-4 shadow-sm">
-            <div class="card-body text-center">
+
+    <div class="col">
+        <div class="card bg-info shadow-sm text-center">
+            <div class="card-body">
                 <i class="fas fa-door-open fa-2x mb-2"></i>
-                <h5 class="card-title">Đang mở</h5>
+                <h6 class="card-title">Đang mở</h6>
                 <h4>@Model.OpenCourses</h4>
             </div>
         </div>
     </div>
-</div>
 
+    <div class="col">
+        <div class="card bg-secondary shadow-sm text-center">
+            <div class="card-body">
+                <i class="fas fa-lock fa-2x mb-2"></i>
+                <h6 class="card-title">Đã bắt đầu / hết hạn</h6>
+                <h4>@Model.ClosedCourses</h4>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="mt-4">
     <h3>Quản lý</h3>
     <div class="row">
         <div class="col-md-4 mb-3">
             <a href="@Url.Action("Index", "Students")" class="text-decoration-none text-dark">
-                <div class="card text-center shadow-sm h-100">
+                <div class="card text-center shadow-sm h-100 border-primary card-hover-lift">
                     <div class="card-body">
                         <i class="fas fa-user-graduate fa-2x mb-2 text-primary"></i>
                         <h5 class="card-title">Học viên</h5>
@@ -80,7 +91,7 @@
 
         <div class="col-md-4 mb-3">
             <a href="@Url.Action("Index", "Courses")" class="text-decoration-none text-dark">
-                <div class="card text-center shadow-sm h-100">
+                <div class="card text-center shadow-sm h-100 border-success card-hover-lift">
                     <div class="card-body">
                         <i class="fas fa-book-open fa-2x mb-2 text-success"></i>
                         <h5 class="card-title">Khóa học</h5>
@@ -92,11 +103,52 @@
 
         <div class="col-md-4 mb-3">
             <a href="@Url.Action("Index", "Enrollments")" class="text-decoration-none text-dark">
-                <div class="card text-center shadow-sm h-100">
+                <div class="card text-center shadow-sm h-100 border-danger card-hover-lift">
                     <div class="card-body">
                         <i class="fas fa-file-signature fa-2x mb-2 text-danger"></i>
                         <h5 class="card-title">Đăng ký</h5>
                         <p class="card-text small text-muted">Xem và quản lý các lượt đăng ký.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <h3 class="mb-3">Thống kê</h3>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <a href="@Url.Action("RevenueStatistics", "Admins")" class="text-decoration-none text-dark">
+                <div class="card text-center shadow-sm h-100 border-primary card-hover-lift">
+                    <div class="card-body">
+                        <i class="fas fa-chart-line fa-2x mb-2 text-primary"></i>
+                        <h5 class="card-title">Doanh thu tổng thể</h5>
+                        <p class="card-text small text-muted">Xem tổng doanh thu theo từng khóa học.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <a href="@Url.Action("StudentCountStatistics", "Admins")" class="text-decoration-none text-dark">
+                <div class="card text-center shadow-sm h-100 border-info card-hover-lift">
+                    <div class="card-body">
+                        <i class="fas fa-users fa-2x mb-2 text-info"></i>
+                        <h5 class="card-title">Số lượng học viên</h5>
+                        <p class="card-text small text-muted">Thống kê số lượng học viên theo từng khóa học.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <a href="@Url.Action("RevenueByMonth", "Admins")" class="text-decoration-none text-dark">
+                <div class="card text-center shadow-sm h-100 border-warning card-hover-lift">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-alt fa-2x mb-2 text-warning"></i>
+                        <h5 class="card-title">Doanh thu theo thời gian</h5>
+                        <p class="card-text small text-muted">Xem doanh thu theo tháng và năm.</p>
                     </div>
                 </div>
             </a>
@@ -109,3 +161,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 }
+
+<style>
+    .card-hover-lift {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .card-hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+</style>

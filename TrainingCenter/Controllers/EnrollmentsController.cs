@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -16,7 +17,7 @@ namespace TrainingCenter.Controllers
         }
 
         // GET: Enrollments
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             if (!IsAdmin())
             {
@@ -36,14 +37,19 @@ namespace TrainingCenter.Controllers
                 course.EnrolledCount = db.Enrollments.Count(e => e.CourseId == course.CourseId);
             }
 
-            return View("Index", courses);
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
+            var pagedCourses = courses
+                .OrderBy(c => c.StartDate)
+                .ToPagedList(pageNumber, pageSize);
+
+            return View("Index", pagedCourses);
         }
 
         public ActionResult StudentsByCourse(int? id)
         {
             if (!id.HasValue)
             {
-                // Nếu id là null, redirect về Index hoặc hiển thị thông báo lỗi
                 TempData["Message"] = "Không tìm thấy khóa học.";
                 TempData["MessageType"] = "error";
                 return RedirectToAction("Index");
@@ -66,9 +72,63 @@ namespace TrainingCenter.Controllers
                 ViewBag.CourseName = enrollments.FirstOrDefault()?.Course.CourseName;
             }
 
-            ViewBag.CourseId = id.Value; // Lưu CourseId để sử dụng trong view
+            ViewBag.CourseId = id.Value;
+
+            string returnUrl = Request.UrlReferrer?.AbsolutePath;
+            if (returnUrl != null)
+            {
+                if (returnUrl.Contains("/Courses/Details"))
+                {
+                    ViewBag.ReturnAction = "Details";
+                    ViewBag.ReturnController = "Courses";
+                    ViewBag.ReturnId = id.Value;
+                }
+                else
+                {
+                    ViewBag.ReturnAction = "Index";
+                    ViewBag.ReturnController = "Enrollments";
+                }
+            }
+            else
+            {
+                ViewBag.ReturnAction = "Index";
+                ViewBag.ReturnController = "Enrollments";
+            }
+
+
             return View(enrollments);
         }
+
+        public ActionResult CoursesByStudent(int? id)
+        {
+            if (!id.HasValue)
+            {
+                TempData["Message"] = "Không tìm thấy học viên.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Index", "Student");
+            }
+
+            var enrollments = db.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Course)
+                .Where(e => e.StudentId == id.Value)
+                .ToList()
+                .OrderBy(e => e.Course.CourseName)
+                .ToList();
+
+            if (!enrollments.Any())
+            {
+                ViewBag.StudentName = db.Students.Find(id.Value)?.FullName ?? "Không xác định";
+            }
+            else
+            {
+                ViewBag.StudentName = enrollments.FirstOrDefault()?.Student.FullName;
+            }
+
+            ViewBag.StudentId = id.Value;
+            return View(enrollments);
+        }
+
 
         // GET: Enrollments/Create
         public ActionResult Create(int? courseId, string returnUrl)

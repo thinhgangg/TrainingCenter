@@ -39,7 +39,7 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Dashboard", "Students");
             }
 
-            TempData["Message"] = "Tên người dùng hoặc mật khẩu không đúng.";
+            TempData["Message"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
             TempData["MessageType"] = "error";
             return View();
         }
@@ -76,7 +76,6 @@ namespace TrainingCenter.Controllers
                     return View(student);
                 }
 
-                // Không mã hóa mật khẩu nữa, lưu trực tiếp
                 db.Students.Add(student);
                 db.SaveChanges();
 

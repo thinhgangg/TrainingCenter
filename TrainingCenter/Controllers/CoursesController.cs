@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -22,7 +23,7 @@ namespace TrainingCenter.Controllers
         }
 
         // GET: Courses
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             if (!IsAdmin())
             {
@@ -31,7 +32,11 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            return View(db.Courses.ToList());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            var courses = db.Courses.OrderBy(c => c.StartDate);
+            return View(courses.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Courses/Details/5

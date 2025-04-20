@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TrainingCenter.Models.Course>
+﻿@model PagedList.IPagedList<TrainingCenter.Models.Course>
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Danh sách khóa học";
@@ -34,12 +35,12 @@
                             <th>@Html.DisplayNameFor(model => model.First().StartDate)</th>
                             <th>@Html.DisplayNameFor(model => model.First().Fee)</th>
                             <th>@Html.DisplayNameFor(model => model.First().MaxStudents)</th>
-                            <th>Thao tác</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         @{
-                            int stt = 1;
+                            int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
                         }
                         @foreach (var item in Model)
                         {
@@ -68,6 +69,27 @@
                         }
                     </tbody>
                 </table>
+                @*Thanh phân trang*@
+                <div class="d-flex justify-content-center mt-4">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                        new PagedListRenderOptions
+                        {
+                            Display = PagedListDisplayMode.Always,
+                            MaximumPageNumbersToDisplay = 5,
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                            DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+                            EllipsesFormat = "…",
+                            LinkToPreviousPageFormat = "«",
+                            LinkToNextPageFormat = "»",
+                            LinkToFirstPageFormat = "←",
+                            LinkToLastPageFormat = "→",
+                            UlElementClasses = new[] { "pagination" },
+                            LiElementClasses = new[] { "page-item" }
+                        })
+                </div>
             </div>
         </div>
     </div>

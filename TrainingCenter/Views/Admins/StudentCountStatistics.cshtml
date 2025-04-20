@@ -1,0 +1,60 @@
+﻿@model IEnumerable<TrainingCenter.Models.ViewModels.StudentCountStatisticViewModel>
+
+@{
+    ViewBag.Title = "Thống kê số lượng học viên";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="text-info"><i class="fas fa-user-graduate me-2"></i> Thống kê số lượng học viên theo khóa học</h3>
+        @Html.ActionLink("← Quay lại bảng điều khiển", "Dashboard", "Admins", null, new { @class = "btn btn-outline-secondary btn-sm" })
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên khóa học</th>
+                        <th>Giảng viên</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Học viên tối đa</th>
+                        <th>Đã đăng ký</th>
+                        <th>Tỷ lệ lấp đầy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int stt = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@stt</td>
+                                <td class="text-start">@item.CourseName</td>
+                                <td class="text-start">@item.Instructor</td>
+                                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                                <td><span>@item.MaxStudents</span></td>
+                                <td><span class="fw-bold">@item.StudentCount</span></td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar
+                                            @(item.FillRate < 50 ? "bg-danger" :
+                                            item.FillRate < 80 ? "bg-warning text-dark" : "bg-success")"
+                                             role="progressbar"
+                                             style="width: @item.FillRate%;"
+                                             aria-valuenow="@item.FillRate" aria-valuemin="0" aria-valuemax="100">
+                                            @item.FillRate%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            stt++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

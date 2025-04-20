@@ -14,57 +14,76 @@
     <div class="card shadow-sm rounded-4">
         <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0"><i class="fas fa-users me-2"></i> Học viên của khóa học: <strong>@ViewBag.CourseName</strong></h4>
-            <a href="@Url.Action("Create", "Enrollments", new { courseId = ViewBag.CourseId, returnUrl = Url.Action("StudentsByCourse", "Enrollments", new { id = ViewBag.CourseId }) })" class="btn btn-light btn-sm">
-                <i class="fas fa-user-plus"></i> Thêm học viên
-            </a>
+            @if (ViewBag.ReturnAction != "Details")
+            {
+                <a href="@Url.Action("Create", "Enrollments", new { courseId = ViewBag.CourseId, returnUrl = Url.Action("StudentsByCourse", "Enrollments", new { id = ViewBag.CourseId }) })" class="btn btn-light btn-sm">
+                    <i class="fas fa-user-plus"></i> Thêm học viên
+                </a>
+            }
         </div>
 
         <div class="card-body">
 
             <div class="mb-3">
-                @Html.ActionLink("← Quay lại danh sách khóa học", "Index", "Enrollments", null, new { @class = "btn btn-outline-secondary btn-sm" })
+                @if (ViewBag.ReturnAction == "Details")
+                {
+                    @Html.ActionLink("← Quay lại thông tin khóa học", "Details", "Courses", new { id = ViewBag.ReturnId }, new { @class = "btn btn-outline-secondary btn-sm" })
+                }
+                else
+                {
+                    @Html.ActionLink("← Quay lại danh sách đăng ký", "Index", "Enrollments", null, new { @class = "btn btn-outline-secondary btn-sm" })
+                }
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th>STT</th>
-                            <th>Họ và tên học viên</th>
-                            <th>Ngày đăng ký</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int stt = 1;
-                        }
-                        @if (!Model.Any())
-                        {
+            <div class="d-flex justify-content-center">
+                <div style="min-width: 500px; max-width: 800px; width: 100%;">
+                    <table class="table table-bordered table-hover align-middle text-center">
+                        <thead class="table-light">
                             <tr>
-                                <td colspan="3" class="text-center text-danger">Không có học viên nào đăng ký khóa học này.</td>
+                                <th>STT</th>
+                                <th class="text-start">Họ và tên học viên</th>
+                                <th>Ngày đăng ký</th>
+                                @if (ViewBag.ReturnAction != "Details")
+                                {
+                                    <th>Hành động</th>
+                                }
                             </tr>
-                        }
-                        else
-                        {
-                            foreach (var item in Model)
+                        </thead>
+                        <tbody>
+                            @{
+                                int stt = 1;
+                            }
+                            @if (!Model.Any())
                             {
                                 <tr>
-                                    <td>@stt</td>
-                                    <td>@item.Student.FullName</td>
-                                    <td>@item.RegisterDate.ToString("dd/MM/yyyy")</td>
-                                    <td>
-                                        <a href="@Url.Action("Delete", new { id = item.EnrollmentId })" class="btn btn-sm btn-outline-danger" title="Xóa đăng ký">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
-                                    </td>
+                                    <td colspan="@(ViewBag.ReturnAction != "Details" ? 4 : 3)" class="text-danger">Không có học viên nào đăng ký khóa học này.</td>
                                 </tr>
-                                stt++;
                             }
-                        }
-                    </tbody>
-                </table>
+                            else
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@stt</td>
+                                        <td class="text-start">@item.Student.FullName</td>
+                                        <td>@item.RegisterDate.ToString("dd/MM/yyyy")</td>
+                                        @if (ViewBag.ReturnAction != "Details")
+                                        {
+                                            <td>
+                                                <a href="@Url.Action("Delete", new { id = item.EnrollmentId })" class="btn btn-sm btn-outline-danger" title="Xóa đăng ký">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+                                        }
+                                    </tr>
+                                    stt++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
