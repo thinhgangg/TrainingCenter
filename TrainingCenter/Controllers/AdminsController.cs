@@ -102,7 +102,7 @@ namespace TrainingCenter.Controllers
                 year = DateTime.Now.Year;
 
             var data = db.Enrollments
-                .Where(e => e.RegisterDate.Month == month && e.RegisterDate.Year == year)
+                .Where(e => e.Course.StartDate.Month == month && e.Course.StartDate.Year == year)
                 .GroupBy(e => e.Course)
                 .Select(g => new RevenueFilterViewModel
                 {
