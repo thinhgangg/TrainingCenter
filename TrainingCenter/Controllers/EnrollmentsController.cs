@@ -48,6 +48,13 @@ namespace TrainingCenter.Controllers
 
         public ActionResult StudentsByCourse(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (!id.HasValue)
             {
                 TempData["Message"] = "Không tìm thấy khóa học.";
@@ -101,6 +108,13 @@ namespace TrainingCenter.Controllers
 
         public ActionResult CoursesByStudent(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (!id.HasValue)
             {
                 TempData["Message"] = "Không tìm thấy học viên.";
@@ -133,6 +147,13 @@ namespace TrainingCenter.Controllers
         // GET: Enrollments/Create
         public ActionResult Create(int? courseId, string returnUrl)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             var students = db.Students
                 .ToList()
                 .OrderBy(s => s.FullName.Split(' ').Last())
@@ -142,7 +163,6 @@ namespace TrainingCenter.Controllers
             ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", courseId);
             ViewBag.ReturnUrl = returnUrl;
 
-            // Nếu returnUrl không hợp lệ, đặt mặc định
             if (!string.IsNullOrEmpty(returnUrl) && returnUrl.Contains("StudentsByCourse") && courseId.HasValue)
             {
                 ViewBag.ReturnUrl = Url.Action("StudentsByCourse", "Enrollments", new { id = courseId.Value });
@@ -158,17 +178,21 @@ namespace TrainingCenter.Controllers
         }
 
         // POST: Enrollments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "EnrollmentId,StudentId,CourseId")] Enrollment enrollment, string returnUrl)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             enrollment.RegisterDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
-                // Kiểm tra xem khóa học có tồn tại không
                 var course = db.Courses.Find(enrollment.CourseId);
                 if (course == null)
                 {
@@ -185,7 +209,6 @@ namespace TrainingCenter.Controllers
                     return View(enrollment);
                 }
 
-                // Kiểm tra giới hạn MaxStudents
                 var registeredCount = db.Enrollments.Count(e => e.CourseId == enrollment.CourseId);
                 if (course.MaxStudents.HasValue && registeredCount >= course.MaxStudents.Value)
                 {
@@ -202,7 +225,6 @@ namespace TrainingCenter.Controllers
                     return View(enrollment);
                 }
 
-                // Kiểm tra xem học viên đã đăng ký khóa học này chưa
                 var existingEnrollment = db.Enrollments
                     .FirstOrDefault(e => e.StudentId == enrollment.StudentId && e.CourseId == enrollment.CourseId);
 
@@ -221,13 +243,11 @@ namespace TrainingCenter.Controllers
                     return View(enrollment);
                 }
 
-                // Thêm đăng ký mới
                 db.Enrollments.Add(enrollment);
                 db.SaveChanges();
                 TempData["Message"] = "Đăng ký thành công!";
                 TempData["MessageType"] = "success";
 
-                // Reset form
                 var newEnrollment = new Enrollment
                 {
                     RegisterDate = DateTime.Now,
@@ -246,7 +266,6 @@ namespace TrainingCenter.Controllers
                 return View(newEnrollment);
             }
 
-            // Nếu ModelState không hợp lệ
             var studentsForError = db.Students
                 .ToList()
                 .OrderBy(s => s.FullName.Split(' ').Last())
@@ -261,6 +280,13 @@ namespace TrainingCenter.Controllers
         // GET: Enrollments/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (id == null)
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
@@ -289,6 +315,13 @@ namespace TrainingCenter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             var enrollment = db.Enrollments.Find(id);
             if (enrollment == null)
             {
@@ -305,7 +338,6 @@ namespace TrainingCenter.Controllers
                 TempData["Message"] = "Xóa đăng ký thành công!";
                 TempData["MessageType"] = "success";
 
-                // Kiểm tra CourseId có tồn tại trước khi chuyển hướng
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                 {
@@ -344,7 +376,6 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Dashboard", "Students");
             }
 
-            // Check if course has started
             if (course.StartDate <= DateTime.Now)
             {
                 TempData["Message"] = "Đăng ký thất bại: Khóa học đã bắt đầu.";
@@ -352,7 +383,6 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Dashboard", "Students");
             }
 
-            // Check enrollment limit
             var enrolledCount = db.Enrollments.Count(e => e.CourseId == courseId);
             if (course.MaxStudents.HasValue && enrolledCount >= course.MaxStudents.Value)
             {
@@ -361,7 +391,6 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Dashboard", "Students");
             }
 
-            // Check if already enrolled
             var existingEnrollment = db.Enrollments.FirstOrDefault(e => e.StudentId == studentId && e.CourseId == courseId);
             if (existingEnrollment != null)
             {
@@ -370,7 +399,6 @@ namespace TrainingCenter.Controllers
                 return RedirectToAction("Dashboard", "Students");
             }
 
-            // Create new enrollment
             var enrollment = new Enrollment
             {
                 StudentId = studentId,

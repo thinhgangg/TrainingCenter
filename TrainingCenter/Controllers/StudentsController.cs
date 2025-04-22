@@ -97,10 +97,11 @@ namespace TrainingCenter.Controllers
         {
             if (!IsAdmin())
             {
-                TempData["Message"] = "Bạn không có quyền truy cập.";
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+                return RedirectToAction("Login", "Account");
             }
+
             if (id == null)
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
@@ -122,10 +123,11 @@ namespace TrainingCenter.Controllers
         {
             if (!IsAdmin())
             {
-                TempData["Message"] = "Bạn không có quyền tạo học viên.";
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+                return RedirectToAction("Login", "Account");
             }
+
             return View(new Student());
         }
 
@@ -138,10 +140,11 @@ namespace TrainingCenter.Controllers
         {
             if (!IsAdmin())
             {
-                TempData["Message"] = "Bạn không có quyền tạo học viên.";
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+                return RedirectToAction("Login", "Account");
             }
+
             if (ModelState.IsValid)
             {
                 if (db.Students.Any(s => s.PhoneNumber == student.PhoneNumber))
@@ -188,6 +191,13 @@ namespace TrainingCenter.Controllers
         // GET: Students/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (id == null)
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
@@ -310,10 +320,11 @@ namespace TrainingCenter.Controllers
         {
             if (!IsAdmin())
             {
-                TempData["Message"] = "Bạn không có quyền xóa.";
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+                return RedirectToAction("Login", "Account");
             }
+
             if (id == null)
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
@@ -337,9 +348,9 @@ namespace TrainingCenter.Controllers
         {
             if (!IsAdmin())
             {
-                TempData["Message"] = "Bạn không có quyền xóa.";
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+                return RedirectToAction("Login", "Account");
             }
 
             Student student = db.Students.Find(id);

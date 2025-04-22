@@ -42,6 +42,13 @@ namespace TrainingCenter.Controllers
         // GET: Courses/Details/5
         public ActionResult Details(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -57,9 +64,11 @@ namespace TrainingCenter.Controllers
         // GET: Courses/Create
         public ActionResult Create()
         {
-            if (TempData["Message"] != null)
+            if (!IsAdmin())
             {
-                ViewBag.Message = TempData["Message"];
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
             }
 
             return View(new Course());
@@ -72,6 +81,13 @@ namespace TrainingCenter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CourseId,CourseName,Instructor,StartDate,Fee,MaxStudents")] Course course)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (ModelState.IsValid)
             {
                 var existingCourse = db.Courses.FirstOrDefault(c => c.CourseName == course.CourseName && c.Instructor == course.Instructor);
@@ -79,7 +95,7 @@ namespace TrainingCenter.Controllers
                 {
                     TempData["Message"] = "Tạo thất bại: Khóa học đã tồn tại.";
                     TempData["MessageType"] = "error";
-                    return View(course); // Trả về form với dữ liệu hiện tại
+                    return View(course);
                 }
                 else
                 {
@@ -91,7 +107,6 @@ namespace TrainingCenter.Controllers
                 }
             }
 
-            // Nếu ModelState không hợp lệ
             TempData["Message"] = "Dữ liệu không hợp lệ.";
             TempData["MessageType"] = "error";
             return View(course);
@@ -100,6 +115,13 @@ namespace TrainingCenter.Controllers
         // GET: Courses/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (id == null)
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
@@ -149,12 +171,17 @@ namespace TrainingCenter.Controllers
 
 
         // POST: Courses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CourseId,CourseName,Instructor,StartDate,Fee,MaxStudents")] Course course)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (ModelState.IsValid)
             {
                 // Kiểm tra trùng lặp CourseName và Instructor, ngoại trừ chính khóa học đang chỉnh sửa
@@ -183,6 +210,13 @@ namespace TrainingCenter.Controllers
         // GET: Courses/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (!IsAdmin())
+            {
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (id == null)
             {
                 TempData["Message"] = "Yêu cầu không hợp lệ.";
@@ -208,9 +242,9 @@ namespace TrainingCenter.Controllers
         {
             if (!IsAdmin())
             {
-                TempData["Message"] = "Bạn không có quyền xóa.";
+                TempData["Message"] = "Vui lòng đăng nhập với tài khoản admin.";
                 TempData["MessageType"] = "error";
-                return RedirectToAction(IsStudent() ? "Dashboard" : "Login", IsStudent() ? "Students" : "Account");
+                return RedirectToAction("Login", "Account");
             }
 
             Course course = db.Courses.Find(id);
